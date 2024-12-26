@@ -148,30 +148,30 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
     const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "1d" });
 
-    console.log(result.role, "RRRR");
+    // console.log(result.role, "RRRR");
 
-    if (result.role == "user") {
-        console.log("uUNDER");
-        res.cookie("user", token, {
-            maxAge: 1000 * 60 * 60 * 24,
-            httpOnly: false,
-            secure: false,
-            // sameSite: "none"
-        });
+    // if (result.role == "user") {
+    // console.log("uUNDER");
+    res.cookie("user", token, {
+        maxAge: 1000 * 60 * 60 * 24,
+        // httpOnly: false,
+        // secure: false,
+        // sameSite: "none"
+    });
 
-        await publishToQueue("user", result)
-        console.log(req.cookies, "COKIIESSS");
+    // await publishToQueue("user", result)
+    // console.log(req.cookies, "COKIIESSS");
 
 
-    } else {
-        res.cookie("admin", token, {
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-            httpOnly: false,
-            secure: false,
-            sameSite: "none"
-        })
-        await publishToQueue("admin", result)
-    }
+    // } else {
+    //     // res.cookie("admin", token, {
+    //     //     maxAge: 1000 * 60 * 60 * 24, // 1 day
+    //     //     httpOnly: false,
+    //     //     secure: false,
+    //     //     sameSite: "none"
+    //     // })
+    //     // await publishToQueue("admin", result)
+    // }
     res.status(200).json({
         message: "Login successful!",
         user: {
