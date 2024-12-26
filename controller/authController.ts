@@ -131,7 +131,6 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
     if (isError) {
         res.status(400).json({ status: 400, message: "All fields are required", error })
     }
-    console.log("hjvsdbckdshfcbsdhf");
 
     const result = await User.findOne({ email })
     if (!result) {
@@ -151,29 +150,28 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
     console.log(result.role, "RRRR");
 
-    // if (result.role == "user") {
-    // console.log("uUNDER");
-    res.cookie("user", token, {
-        maxAge: 840000000,
-        httpOnly: false,
-        secure: false,
-        // sameSite: "none"
-    });
+    if (result.role == "user") {
+        console.log("uUNDER");
+        res.cookie("user", token, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: false,
+            secure: false,
+            // sameSite: "none"
+        });
 
-    await publishToQueue("user", result)
-    console.log(req.cookies, "COKIIESSS");
+        await publishToQueue("user", result)
+        console.log(req.cookies, "COKIIESSS");
 
 
-    // }
-    // else {
-    //     res.cookie("admin", token, {
-    //         maxAge: 1000 * 60 * 60 * 24, // 1 day
-    //         httpOnly: true,
-    //         secure: true,
-    //         sameSite: "none"
-    //     })
-    //     await publishToQueue("admin", result)
-    // }
+    } else {
+        res.cookie("admin", token, {
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        })
+        await publishToQueue("admin", result)
+    }
     res.status(200).json({
         message: "Login successful!",
         user: {
