@@ -153,7 +153,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
     if (result.role == "user") {
         console.log("uUNDER");
         res.cookie("user", token, {
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            maxAge: 1000 * 60 * 60 * 24,
             httpOnly: true,
             secure: true,
             sameSite: "none"
