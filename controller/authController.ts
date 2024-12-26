@@ -154,8 +154,8 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
         console.log("uUNDER");
         res.cookie("user", token, {
             maxAge: 1000 * 60 * 60 * 24, // 1 day
-            httpOnly: false,
-            secure: false,
+            httpOnly: true,
+            secure: true,
             sameSite: "none"
         });
 
@@ -165,8 +165,9 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
     } else {
         res.cookie("admin", token, {
-            maxAge: 1000 * 60 * 60 * 24, httpOnly: false,
-            secure: false,
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            httpOnly: true,
+            secure: true,
             sameSite: "none"
         })
         await publishToQueue("admin", result)
