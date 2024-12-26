@@ -16,7 +16,7 @@ import {
 const authrouter = express.Router()
 
 authrouter.post("/register", registerUser)
-// authrouter.post("/login", loginUser)
+authrouter.post("/login", loginUser)
 authrouter.post("/logout", logoutUser)
 authrouter.post("/register-admin", registerAdmin)
 authrouter.post("/logout-admin", logoutAdmin)
