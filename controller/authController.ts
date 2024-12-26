@@ -163,15 +163,16 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
         console.log(req.cookies, "COKIIESSS");
 
 
-    } else {
-        res.cookie("admin", token, {
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
-            httpOnly: true,
-            secure: true,
-            sameSite: "none"
-        })
-        await publishToQueue("admin", result)
     }
+    // else {
+    //     res.cookie("admin", token, {
+    //         maxAge: 1000 * 60 * 60 * 24, // 1 day
+    //         httpOnly: true,
+    //         secure: true,
+    //         sameSite: "none"
+    //     })
+    //     await publishToQueue("admin", result)
+    // }
     res.status(200).json({
         message: "Login successful!",
         user: {
