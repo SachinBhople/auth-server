@@ -20,6 +20,9 @@ app.use(cors({
 
 app.use("/api/auth", authrouter)
 
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 app.use(
   (err: any, req: Request, res: Response, next: NextFunction): any => {
