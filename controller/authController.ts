@@ -146,14 +146,14 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
 
 
-    const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "1d" });
+    const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "5d" });
 
     console.log(result.role, "RRRR");
 
     if (result.role == "user") {
         console.log("uUNDER");
         res.cookie("user", token, {
-            maxAge: 1000 * 60 * 60 * 24,
+            maxAge: 1000 * 60 * 60 * 24 * 5
             // httpOnly: false,
             // secure: false,
             // sameSite: "none"
@@ -165,7 +165,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
     } else {
         res.cookie("admin", token, {
-            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            maxAge: 1000 * 60 * 60 * 24 * 5
             // httpOnly: true,
             // secure: true,
             // sameSite: "none"
