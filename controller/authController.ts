@@ -152,11 +152,11 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
     // // if (result.role == "user") {
     // // console.log("uUNDER");
-    res.cookie("user", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 5
-        // secure: false,
-        // sameSite: "none"
-    });
+    // res.cookie("user", token, {
+    //     maxAge: 1000 * 60 * 60 * 24 * 5
+    //     // secure: false,
+    //     // sameSite: "none"
+    // });
 
     // await publishToQueue("user", result)
     // console.log(req.cookies, "COKIIESSS");
@@ -171,6 +171,17 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
     //     // })
     //     // await publishToQueue("admin", result)
     // }
+
+
+
+    res.cookie("user", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 5,
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+    });
+
     res.status(200).json({
         message: "Login successful!",
         user: {
