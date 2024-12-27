@@ -175,11 +175,9 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
 
     res.cookie("user", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 5,
         httpOnly: true,
         secure: true,
-        sameSite: "none",
-        path: "/",
+        sameSite: 'none',
     });
 
     res.status(200).json({
