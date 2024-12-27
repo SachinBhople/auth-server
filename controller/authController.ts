@@ -118,6 +118,83 @@ export const registerUser = asyncHandler(async (req: Request, res: Response): Pr
     })
 })
 
+// export const loginUser = asyncHandler(async (req: Request, res: Response): Promise<any> => {
+//     const validation = loginSchema.safeParse(req.body)
+//     if (!validation.success) {
+//         return res.status(400).json({
+//             status: 400,
+//             errors: validation.error.errors
+//         })
+//     }
+//     const { email, password } = validation.data
+//     const { isError, error } = checkEmpty({ password, email })
+//     if (isError) {
+//         res.status(400).json({ status: 400, message: "All fields are required", error })
+//     }
+
+//     const result = await User.findOne({ email })
+//     if (!result) {
+//         return res.status(400).json({ status: 400, message: "user is not exists" })
+//     }
+//     const verify = await bcrypt.compare(password, result.password)
+//     if (!verify) {
+//         return res.status(400).json({
+//             status: 400,
+//             message: "Password is not match"
+//         })
+//     }
+
+
+
+//     const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "5d" });
+
+//     // // console.log(result.role, "RRRR");
+
+//     // // if (result.role == "user") {
+//     // // console.log("uUNDER");
+//     // res.cookie("user", token, {
+//     //     maxAge: 1000 * 60 * 60 * 24 * 5
+//     //     // secure: false,
+//     //     // sameSite: "none"
+//     // });
+
+//     // await publishToQueue("user", result)
+//     // console.log(req.cookies, "COKIIESSS");
+
+
+//     // } else {
+//     //     // res.cookie("admin", token, {
+//     //     //     maxAge: 1000 * 60 * 60 * 24, // 1 day
+//     //     //     httpOnly: false,
+//     //     //     secure: false,
+//     //     //     sameSite: "none"
+//     //     // })
+//     //     // await publishToQueue("admin", result)
+//     // }
+
+
+
+//     res.cookie("user", token, {
+//         httpOnly: true,
+//         secure: true,
+//         sameSite: 'none',
+//         maxAge: 3600000
+//     });
+
+//     res.status(200).json({
+//         message: "Login successful!",
+//         user: {
+//             id: result._id,
+//             role: result.role,
+//             name: result.name,
+//             email: result.email,
+//             mobile: result.mobile,
+//             profile: result.profile,
+//         },
+//     });
+
+// })
+
 export const loginUser = asyncHandler(async (req: Request, res: Response): Promise<any> => {
     const validation = loginSchema.safeParse(req.body)
     if (!validation.success) {
@@ -146,46 +223,20 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
 
 
 
-    const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "5d" });
+    const token = jwt.sign({ userId: result._id }, process.env.JWT_KEY as string, { expiresIn: "7d" });
+    if (result.role === "user") {
+        res.cookie("user", token, { maxAge: 1000 * 60 * 60 * 24 })
+        await publishToQueue("user", result)
 
-    // // console.log(result.role, "RRRR");
-
-    // // if (result.role == "user") {
-    // // console.log("uUNDER");
-    // res.cookie("user", token, {
-    //     maxAge: 1000 * 60 * 60 * 24 * 5
-    //     // secure: false,
-    //     // sameSite: "none"
-    // });
-
-    // await publishToQueue("user", result)
-    // console.log(req.cookies, "COKIIESSS");
-
-
-    // } else {
-    //     // res.cookie("admin", token, {
-    //     //     maxAge: 1000 * 60 * 60 * 24, // 1 day
-    //     //     httpOnly: false,
-    //     //     secure: false,
-    //     //     sameSite: "none"
-    //     // })
-    //     // await publishToQueue("admin", result)
-    // }
-
-
-
-    res.cookie("user", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'none',
-        maxAge: 3600000
-    });
-
+    } else {
+        res.cookie("admin", token, { maxAge: 1000 * 60 * 60 * 24 })
+        await publishToQueue("admin", result)
+    }
     res.status(200).json({
         message: "Login successful!",
+        token,
         user: {
             id: result._id,
-            role: result.role,
             name: result.name,
             email: result.email,
             mobile: result.mobile,
