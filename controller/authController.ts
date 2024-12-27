@@ -178,6 +178,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response): Promi
         httpOnly: true,
         secure: true,
         sameSite: 'none',
+        maxAge: 3600000
     });
 
     res.status(200).json({
